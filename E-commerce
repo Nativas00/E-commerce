@@ -89,8 +89,10 @@ CREATE TABLE `carrinho` (
 
 CREATE TABLE `pagamentos` (
     `pagamento_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `tipo` VARCHAR(50) NOT NULL,
+    `venda_id` INT UNSIGNED NOT NULL,
+    `data_pagamento` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `valor_pago` DECIMAL(10, 2) NOT NULL,
+    `metodo_pagamento` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`pagamento_id`),
     FOREIGN KEY (`venda_id`) REFERENCES `vendas`(`venda_id`)
 );
