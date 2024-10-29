@@ -1,0 +1,41 @@
+USE `Ecommerce`;
+
+SELECT COUNT(*) AS total_clientes FROM clientes;
+
+SELECT * FROM produtos WHERE estoque > 50;
+
+SELECT c.nome, COUNT(v.venda_id) AS total_vendas
+FROM clientes c
+LEFT JOIN vendas v ON c.cliente_id = v.cliente_id
+GROUP BY c.cliente_id;
+
+SELECT * FROM clientes WHERE data_cadastro >= NOW() - INTERVAL 30 DAY;
+
+SELECT c.nome, e.cidade
+FROM clientes c
+JOIN enderecos e ON c.cliente_id = e.cliente_id;
+
+SELECT v.venda_id, p.nome, iv.quantidade
+FROM itens_venda iv
+JOIN produtos p ON iv.produto_id = p.produto_id
+JOIN vendas v ON iv.venda_id = v.venda_id;
+
+SELECT c.descricao, SUM(p.estoque) AS total_estoque
+FROM categorias c
+JOIN produtos p ON c.categoria_id = p.categoria_id
+GROUP BY c.categoria_id;
+
+SELECT f.nome, SUM(iv.quantidade) AS total_vendidos
+FROM fornecedores f
+JOIN produtos p ON f.fornecedor_id = p.fornecedor_id
+JOIN itens_venda iv ON p.produto_id = iv.produto_id
+GROUP BY f.fornecedor_id;
+
+SELECT DATE(data_venda) AS dia, SUM(p.valor) AS total_vendas
+FROM vendas v
+JOIN pagamentos p ON v.pagamento_id = p.pagamento_id
+GROUP BY dia;
+
+SELECT DISTINCT c.nome
+FROM clientes c
+JOIN carrinho ca ON c.cliente_id = ca.cliente_id;
