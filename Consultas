@@ -1,5 +1,3 @@
-USE `Ecommerce`;
-
 SELECT COUNT(*) AS total_clientes FROM clientes;
 
 SELECT * FROM produtos WHERE estoque > 50;
@@ -20,7 +18,7 @@ FROM itens_venda iv
 JOIN produtos p ON iv.produto_id = p.produto_id
 JOIN vendas v ON iv.venda_id = v.venda_id;
 
-SELECT c.descricao, SUM(p.estoque) AS total_estoque
+SELECT c.nome, SUM(p.estoque) AS total_estoque
 FROM categorias c
 JOIN produtos p ON c.categoria_id = p.categoria_id
 GROUP BY c.categoria_id;
@@ -31,11 +29,42 @@ JOIN produtos p ON f.fornecedor_id = p.fornecedor_id
 JOIN itens_venda iv ON p.produto_id = iv.produto_id
 GROUP BY f.fornecedor_id;
 
-SELECT DATE(data_venda) AS dia, SUM(p.valor) AS total_vendas
+SELECT DATE(v.data_venda) AS dia, SUM(iv.preco_unitario * iv.quantidade) AS total_vendas
 FROM vendas v
-JOIN pagamentos p ON v.pagamento_id = p.pagamento_id
+JOIN itens_venda iv ON v.venda_id = iv.venda_id
 GROUP BY dia;
 
 SELECT DISTINCT c.nome
 FROM clientes c
 JOIN carrinho ca ON c.cliente_id = ca.cliente_id;
+
+SELECT c.nome, GROUP_CONCAT(p.nome) AS produtos
+FROM clientes c
+JOIN carrinho ca ON c.cliente_id = ca.cliente_id
+JOIN produtos p ON ca.produto_id = p.produto_id
+GROUP BY c.cliente_id;
+
+SELECT c.nome
+FROM clientes c
+JOIN vendas v ON c.cliente_id = v.cliente_id
+JOIN status_pedido sp ON v.status_id = sp.status_id
+WHERE sp.descricao = 'Pendente';
+
+SELECT AVG(p.preco) AS preco_medio, c.nome
+FROM produtos p
+JOIN categorias c ON p.categoria_id = c.categoria_id
+GROUP BY c.categoria_id;
+
+SELECT SUM(iv.quantidade) AS total_produtos_vendidos
+FROM itens_venda iv;
+
+SELECT c.nome, COUNT(v.venda_id) AS total_compras
+FROM clientes c
+JOIN vendas v ON c.cliente_id = v.cliente_id
+GROUP BY c.cliente_id
+HAVING COUNT(v.venda_id) > 3;
+
+SELECT sp.descricao, COUNT(v.venda_id) AS total_vendas
+FROM vendas v
+JOIN status_pedido sp ON v.status_id = sp.status_id
+GROUP BY sp.status_id;
