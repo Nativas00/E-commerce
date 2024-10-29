@@ -2,7 +2,7 @@ CREATE DATABASE `Ecommerce`;
 USE `Ecommerce`;
 
 CREATE TABLE `clientes` (
-    `cliente_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `telefone` VARCHAR(15) NOT NULL,
@@ -11,8 +11,8 @@ CREATE TABLE `clientes` (
 );
 
 CREATE TABLE `enderecos` (
-    `endereco_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT(10) UNSIGNED NOT NULL,
+    `endereco_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT UNSIGNED NOT NULL,
     `rua` VARCHAR(100) NOT NULL,
     `numero` VARCHAR(10) NOT NULL,
     `cidade` VARCHAR(50) NOT NULL,
@@ -23,50 +23,50 @@ CREATE TABLE `enderecos` (
 );
 
 CREATE TABLE `categorias` (
-    `categoria_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `categoria_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `descricao` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`categoria_id`)
 );
 
 CREATE TABLE `fornecedores` (
-    `fornecedor_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `fornecedor_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(100) NOT NULL,
     `contato` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`fornecedor_id`)
 );
 
 CREATE TABLE `produtos` (
-    `produto_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `produto_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(100) NOT NULL,
     `descricao` TEXT,
     `preco` DECIMAL(10, 2) NOT NULL,
-    `estoque` INT(10) UNSIGNED NOT NULL,
-    `categoria_id` INT(10) UNSIGNED NOT NULL,
-    `fornecedor_id` INT(10) UNSIGNED NOT NULL,
+    `estoque` INT UNSIGNED NOT NULL,
+    `categoria_id` INT UNSIGNED NOT NULL,
+    `fornecedor_id` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`produto_id`),
     FOREIGN KEY (`categoria_id`) REFERENCES `categorias`(`categoria_id`),
     FOREIGN KEY (`fornecedor_id`) REFERENCES `fornecedores`(`fornecedor_id`)
 );
 
 CREATE TABLE `pagamentos` (
-    `pagamento_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `pagamento_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `tipo` VARCHAR(50) NOT NULL,
     `valor` DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (`pagamento_id`)
 );
 
 CREATE TABLE `status_pedido` (
-    `status_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `status_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `descricao` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`status_id`)
 );
 
 CREATE TABLE `vendas` (
-    `venda_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT(10) UNSIGNED NOT NULL,
+    `venda_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT UNSIGNED NOT NULL,
     `data_venda` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `pagamento_id` INT(10) UNSIGNED NOT NULL,
-    `status_id` INT(10) UNSIGNED NOT NULL,
+    `pagamento_id` INT UNSIGNED NOT NULL,
+    `status_id` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`venda_id`),
     FOREIGN KEY (`cliente_id`) REFERENCES `clientes`(`cliente_id`),
     FOREIGN KEY (`pagamento_id`) REFERENCES `pagamentos`(`pagamento_id`),
@@ -74,20 +74,20 @@ CREATE TABLE `vendas` (
 );
 
 CREATE TABLE `itens_venda` (
-    `item_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `venda_id` INT(10) UNSIGNED NOT NULL,
-    `produto_id` INT(10) UNSIGNED NOT NULL,
-    `quantidade` INT(10) UNSIGNED NOT NULL,
+    `item_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `venda_id` INT UNSIGNED NOT NULL,
+    `produto_id` INT UNSIGNED NOT NULL,
+    `quantidade` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`item_id`),
     FOREIGN KEY (`venda_id`) REFERENCES `vendas`(`venda_id`),
     FOREIGN KEY (`produto_id`) REFERENCES `produtos`(`produto_id`)
 );
 
 CREATE TABLE `carrinho` (
-    `carrinho_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT(10) UNSIGNED NOT NULL,
-    `produto_id` INT(10) UNSIGNED NOT NULL,
-    `quantidade` INT(10) UNSIGNED NOT NULL,
+    `carrinho_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT UNSIGNED NOT NULL,
+    `produto_id` INT UNSIGNED NOT NULL,
+    `quantidade` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`carrinho_id`),
     FOREIGN KEY (`cliente_id`) REFERENCES `clientes`(`cliente_id`),
     FOREIGN KEY (`produto_id`) REFERENCES `produtos`(`produto_id`)
