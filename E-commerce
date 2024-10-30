@@ -1,98 +1,94 @@
-CREATE DATABASE `Ecommerce`;
-USE `Ecommerce`;
+CREATE DATABASE `E-commerce`;
+USE `E-commerce`;
 
-CREATE TABLE `clientes` (
-    `cliente_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(100) NOT NULL,
-    `telefone` VARCHAR(15) NOT NULL,
-    `data_cadastro` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`cliente_id`)
+CREATE TABLE Clientes (
+    Cliente_ID INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15),
+    Data_Cadastro DATE NOT NULL
 );
 
-CREATE TABLE `enderecos` (
-    `endereco_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT UNSIGNED NOT NULL,
-    `rua` VARCHAR(100) NOT NULL,
-    `cidade` VARCHAR(50) NOT NULL,
-    `estado` VARCHAR(50) NOT NULL,
-    `cep` VARCHAR(10) NOT NULL,
-    PRIMARY KEY (`endereco_id`),
-    FOREIGN KEY (`cliente_id`) REFERENCES `clientes`(`cliente_id`)
+CREATE TABLE Enderecos (
+    Endereco_ID INT PRIMARY KEY,
+    Cliente_ID INT,
+    Rua VARCHAR(100) NOT NULL,
+    Cidade VARCHAR(50) NOT NULL,
+    Estado VARCHAR(2) NOT NULL,
+    CEP VARCHAR(10) NOT NULL,
+    FOREIGN KEY (Cliente_ID) REFERENCES Clientes(Cliente_ID)
 );
 
-CREATE TABLE `categorias` (
-    `categoria_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(100) NOT NULL,
-    `descricao` VARCHAR(100) NOT NULL,
-    PRIMARY KEY (`categoria_id`)
+CREATE TABLE Fornecedores (
+    Fornecedor_ID INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Contato VARCHAR(100),
+    Telefone VARCHAR(15),
+    Email VARCHAR(100)
 );
 
-CREATE TABLE `fornecedores` (
-    `fornecedor_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(100) NOT NULL,
-    `contato` VARCHAR(100) NOT NULL,
-    `telefone` VARCHAR(15) NOT NULL,
-    `email` VARCHAR(100) NOT NULL,
-    PRIMARY KEY (`fornecedor_id`)
+CREATE TABLE Categorias (
+    Categoria_ID INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao TEXT
 );
 
-CREATE TABLE `produtos` (
-    `produto_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(100) NOT NULL,
-    `descricao` TEXT,
-    `preco` DECIMAL(10, 2) NOT NULL,
-    `estoque` INT UNSIGNED NOT NULL,
-    `categoria_id` INT UNSIGNED NOT NULL,
-    `fornecedor_id` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`produto_id`),
-    FOREIGN KEY (`categoria_id`) REFERENCES `categorias`(`categoria_id`),
-    FOREIGN KEY (`fornecedor_id`) REFERENCES `fornecedores`(`fornecedor_id`)
+CREATE TABLE Produtos (
+    Produto_ID INT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao TEXT,
+    Preco DECIMAL(10, 2) NOT NULL,
+    Estoque INT NOT NULL,
+    Categoria_ID INT,
+    Fornecedor_ID INT,
+    FOREIGN KEY (Categoria_ID) REFERENCES Categorias(Categoria_ID),
+    FOREIGN KEY (Fornecedor_ID) REFERENCES Fornecedores(Fornecedor_ID)
 );
 
-CREATE TABLE `status_pedido` (
-    `status_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `descricao` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`status_id`)
+CREATE TABLE Status_Pedido (
+    Status_ID INT PRIMARY KEY,
+    Descricao VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE `vendas` (
-    `venda_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT UNSIGNED NOT NULL,
-    `data_venda` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `status_id` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`venda_id`),
-    FOREIGN KEY (`cliente_id`) REFERENCES `clientes`(`cliente_id`),
-    FOREIGN KEY (`status_id`) REFERENCES `status_pedido`(`status_id`)
+CREATE TABLE Vendas (
+    Venda_ID INT PRIMARY KEY,
+    Cliente_ID INT,
+    Data_Venda DATE NOT NULL,
+    Status_ID INT,
+    FOREIGN KEY (Cliente_ID) REFERENCES Clientes(Cliente_ID),
+    FOREIGN KEY (Status_ID) REFERENCES Status_Pedido(Status_ID)
 );
 
-CREATE TABLE `itens_venda` (
-    `item_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `venda_id` INT UNSIGNED NOT NULL,
-    `produto_id` INT UNSIGNED NOT NULL,
-    `quantidade` INT UNSIGNED NOT NULL,
-    `preco_unitario` DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (`item_id`),
-    FOREIGN KEY (`venda_id`) REFERENCES `vendas`(`venda_id`),
-    FOREIGN KEY (`produto_id`) REFERENCES `produtos`(`produto_id`)
+CREATE TABLE Itens_Venda (
+    Item_ID INT PRIMARY KEY,
+    Venda_ID INT,
+    Produto_ID INT,
+    Quantidade INT NOT NULL,
+    Preco_Unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (Venda_ID) REFERENCES Vendas(Venda_ID),
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(Produto_ID)
 );
 
-CREATE TABLE `carrinho` (
-    `carrinho_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `cliente_id` INT UNSIGNED NOT NULL,
-    `produto_id` INT UNSIGNED NOT NULL,
-    `quantidade` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`carrinho_id`),
-    FOREIGN KEY (`cliente_id`) REFERENCES `clientes`(`cliente_id`),
-    FOREIGN KEY (`produto_id`) REFERENCES `produtos`(`produto_id`)
+CREATE TABLE Carrinho (
+    Carrinho_ID INT PRIMARY KEY,
+    Cliente_ID INT,
+    FOREIGN KEY (Cliente_ID) REFERENCES Clientes(Cliente_ID)
 );
 
-CREATE TABLE `pagamentos` (
-    `pagamento_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `venda_id` INT UNSIGNED NOT NULL,
-    `data_pagamento` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `valor_pago` DECIMAL(10, 2) NOT NULL,
-    `metodo_pagamento` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`pagamento_id`),
-    FOREIGN KEY (`venda_id`) REFERENCES `vendas`(`venda_id`)
+CREATE TABLE Itens_Carrinho (
+    Item_Carrinho_ID INT PRIMARY KEY,
+    Carrinho_ID INT,
+    Produto_ID INT,
+    Quantidade INT NOT NULL,
+    FOREIGN KEY (Carrinho_ID) REFERENCES Carrinho(Carrinho_ID),
+    FOREIGN KEY (Produto_ID) REFERENCES Produtos(Produto_ID)
+);
+
+CREATE TABLE Pagamentos (
+    Pagamento_ID INT PRIMARY KEY,
+    Venda_ID INT,
+    Data_Pagamento DATE NOT NULL,
+    Valor_Pago DECIMAL(10, 2) NOT NULL,
+    Metodo_Pagamento VARCHAR(50),
+    FOREIGN KEY (Venda_ID) REFERENCES Vendas(Venda_ID)
 );
